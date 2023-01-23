@@ -6,7 +6,13 @@
     "removeComments": true,
     "esModuleInterop": true,
     "preserveConstEnums": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "typeRoots": ["./src/@types/Request.ts"]
   },
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "dist"],
+	"ts-node": {
+		"files": true
+	}
 
 }
