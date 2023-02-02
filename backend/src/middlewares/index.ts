@@ -8,23 +8,29 @@ export const authMiddleware = async (
 	res: Response,
 	next: NextFunction
 ) => {
-	const { authorization } = req.headers
+	try {
+		
+		const { authorization } = req.headers
+	
+		if (!authorization) {
+			return res.status(401).json({ error: 'Não Autorizado' });
+		}
+	
+		const token = authorization.split(' ')[1]
+	
+		const { id } = jwt.verify(token, process.env.JWT_PASS) as JwtPayload
+	
+		const user = await prisma.user.findUnique({ where: { id } });
+	
+		if (!user) {
+			return res.status(401).json({ error: 'Não Autorizado' });
+		}
+		 
+		req.user= user;
+	
+		next()
+	} catch (error) {
 
-	if (!authorization) {
-        return res.status(401).json({ error: 'Não Autorizado' });
+		return res.status(401).json({ error: 'Token na listra negra!' });
 	}
-
-	const token = authorization.split(' ')[1]
-
-	const { id } = jwt.verify(token, process.env.JWT_PASS) as JwtPayload
-
-	const user = await prisma.user.findUnique({ where: { id } });
-
-	if (!user) {
-		return res.status(401).json({ error: 'Não Autorizado' });
-	}
-     
-    req.user= user;
-
-	next()
 }

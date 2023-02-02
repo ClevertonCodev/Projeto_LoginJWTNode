@@ -11,6 +11,7 @@ routes.post('/user', UserController.create);
 
 routes.use(authMiddleware);
     //usuario 
+    routes.post('/super', UserController.createSuper);
     routes.get('/user', UserController.getAll);
     routes.get('/user/:id', UserController.getOne);
     routes.put('/user/:id', UserController.update);
